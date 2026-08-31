@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, ScrollView, ActivityIndicator } from 'react-native';
 import { WebView } from 'react-native-webview';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as ImagePicker from 'expo-image-picker';
@@ -9,6 +10,7 @@ import { TestContext } from '../context/TestContext';
 const IMAGES_DIR = FileSystem.documentDirectory + 'testYap_images/';
 
 export default function QuestionEditScreen({ route, navigation }) {
+  const insets = useSafeAreaInsets();
   const { questionId } = route.params;
   const { questions, updateQuestion } = useContext(TestContext);
   
@@ -205,7 +207,7 @@ export default function QuestionEditScreen({ route, navigation }) {
       </View>
 
       <View style={styles.settingsPanel}>
-        <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+        <ScrollView bounces={false} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
           <Text style={styles.label}>Resmi Değiştir:</Text>
           <View style={styles.row}>
             <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#e1b12c' }]} onPress={openNativeCamera}>

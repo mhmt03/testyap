@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { TestContext } from '../context/TestContext';
+import * as dbOperations from '../database/db';
 
 export default function TestSettingsScreen({ navigation }) {
   const { startNewTest } = useContext(TestContext);
@@ -10,6 +11,22 @@ export default function TestSettingsScreen({ navigation }) {
     if (!inputName.trim()) {
       Alert.alert('Hata', 'Lütfen test adını giriniz.');
       return;
+    }
+    
+    // Lisans kontrolü
+    const isLicensedStr = await dbOperations.getSetting('isLicensed', 'false');
+    const isLicensed = isLicensedStr === 'true';
+    
+    if (!isLicensed) {
+      const allTests = await dbOperations.getTests();
+      if (allTests.length >= 5) {
+        Alert.alert(
+          'Lisans Gerekli', 
+          'Ücretsiz sürümde en fazla 5 test oluşturabilirsiniz. Yeni test oluşturmak için mevcut testlerden birini silmeli veya İşlemler menüsünden uygulamayı aktifleştirmelisiniz.',
+          [{ text: 'Tamam', style: 'cancel' }]
+        );
+        return;
+      }
     }
     
     await startNewTest(inputName.trim());

@@ -4,10 +4,12 @@ import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system/legacy';
 import { WebView } from 'react-native-webview';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TestContext } from '../context/TestContext';
 import * as dbOperations from '../database/db';
 
 export default function ExportScreen() {
+  const insets = useSafeAreaInsets();
   const { testName, questions } = useContext(TestContext);
   
   const [title, setTitle] = useState(testName || 'Sınav');
@@ -375,7 +377,7 @@ export default function ExportScreen() {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom > 0 ? insets.bottom + 10 : 40 }}>
         <Text style={styles.title}>PDF Ayarları</Text>
 
         <Text style={styles.label}>Test Başlığı:</Text>

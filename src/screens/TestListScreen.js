@@ -2,10 +2,11 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { TestContext } from '../context/TestContext';
 import * as dbOperations from '../database/db';
-
 import * as FileSystem from 'expo-file-system/legacy';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TestListScreen({ navigation }) {
+  const insets = useSafeAreaInsets();
   const [tests, setTests] = useState([]);
   const { loadTest, testId } = useContext(TestContext);
 
@@ -114,7 +115,7 @@ export default function TestListScreen({ navigation }) {
           data={tests}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
-          contentContainerStyle={styles.listContent}
+          contentContainerStyle={[styles.listContent, { paddingBottom: insets.bottom + 20 }]}
         />
       )}
     </View>

@@ -1,7 +1,10 @@
 import React, { useContext, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, FlatList } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TestContext } from '../context/TestContext';
+
 export default function QuestionListScreen({ navigation }) {
+  const insets = useSafeAreaInsets();
   const { questions, removeQuestion, reorderQuestions, testName } = useContext(TestContext);
   const [imageSize, setImageSize] = React.useState(120);
 
@@ -49,20 +52,12 @@ export default function QuestionListScreen({ navigation }) {
 
   const renderItem = ({ item, index }) => {
     return (
-        <TouchableOpacity 
-          style={styles.itemContainer}
-          onPress={() => navigation.navigate('QuestionEdit', { questionId: item.id })}
-        >
-          <View style={styles.dragHandle}>
-            <TouchableOpacity onPress={() => moveUp(index)} disabled={index === 0}>
-              <Text style={{ fontSize: 24, color: index === 0 ? '#f1f2f6' : '#0097e6' }}>▲</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => moveDown(index)} disabled={index === questions.length - 1}>
-              <Text style={{ fontSize: 24, color: index === questions.length - 1 ? '#f1f2f6' : '#0097e6' }}>▼</Text>
-            </TouchableOpacity>
-          </View>
-          
-          <View style={[styles.imageContainer, { width: imageSize, height: imageSize }]}>
+        <View style={styles.itemContainer}>
+          {/* Sol: Resim */}
+          <TouchableOpacity 
+            onPress={() => navigation.navigate('QuestionEdit', { questionId: item.id })}
+            style={[styles.imageContainer, { width: imageSize, height: imageSize }]}
+          >
             <Image 
               source={{ uri: item.imageUri }} 
               style={[styles.image, item.colorMode !== 'original' && { opacity: 0.7 }]} 
@@ -70,19 +65,34 @@ export default function QuestionListScreen({ navigation }) {
             />
             {item.colorMode === 'grayscale' && <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(128,128,128,0.5)' }]} pointerEvents="none" />}
             {item.colorMode === 'blackwhite' && <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.6)' }]} pointerEvents="none" />}
-          </View>
+          </TouchableOpacity>
 
-          <View style={styles.infoContainer}>
-            <Text style={styles.questionNum}>Soru {index + 1}</Text>
-            <View style={styles.ansBadge}>
-              <Text style={styles.ansText}>Cevap: {item.correctAnswer}</Text>
+          {/* Sağ Kısım (flex: 1) */}
+          <View style={styles.controlsContainer}>
+            {/* Soru Numarası ve Oklar (Alt Alta) */}
+            <View style={styles.col1}>
+              <Text style={styles.questionNum}>{index + 1}. Soru</Text>
+              <View style={styles.dragHandle}>
+                <TouchableOpacity onPress={() => moveUp(index)} disabled={index === 0} style={styles.iconBtn}>
+                  <Text style={{ fontSize: 24, color: index === 0 ? '#f1f2f6' : '#0097e6' }}>▲</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => moveDown(index)} disabled={index === questions.length - 1} style={styles.iconBtn}>
+                  <Text style={{ fontSize: 24, color: index === questions.length - 1 ? '#f1f2f6' : '#0097e6' }}>▼</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Cevap ve Sil Butonu (Alt Alta) */}
+            <View style={styles.col2}>
+              <View style={styles.ansBadge}>
+                <Text style={styles.ansText}>{item.correctAnswer}</Text>
+              </View>
+              <TouchableOpacity style={styles.delBtn} onPress={() => removeQuestion(item.id)}>
+                <Text style={styles.delBtnText}>Sil</Text>
+              </TouchableOpacity>
             </View>
           </View>
-
-          <TouchableOpacity style={styles.delBtn} onPress={() => removeQuestion(item.id)}>
-            <Text style={{ color: '#fff' }}>Sil</Text>
-          </TouchableOpacity>
-        </TouchableOpacity>
+        </View>
     );
   };
 
@@ -100,12 +110,12 @@ export default function QuestionListScreen({ navigation }) {
           data={questions}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
-          contentContainerStyle={{ padding: 10, paddingBottom: 100 }}
+          contentContainerStyle={{ padding: 10, paddingBottom: insets.bottom + 100 }}
         />
       )}
 
       {questions.length > 0 && (
-        <View style={styles.footer}>
+        <View style={[styles.footer, { paddingBottom: insets.bottom > 0 ? insets.bottom + 10 : 15 }]}>
           <TouchableOpacity style={styles.homeBtn} onPress={() => navigation.navigate('Home')}>
             <Text style={styles.btnText}>🏠</Text>
           </TouchableOpacity>
@@ -148,60 +158,80 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#fff',
     padding: 10,
     marginBottom: 10,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#dcdde1',
-    elevation: 1,
+    elevation: 2,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 1 }
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5
   },
-  dragHandle: {
-    padding: 10,
-    justifyContent: 'center',
+  controlsContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center'
   },
+  col1: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10
+  },
+  col2: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 15
+  },
+  dragHandle: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  iconBtn: {
+    paddingHorizontal: 8,
+    paddingVertical: 5
+  },
   imageContainer: {
-    width: 120,
-    height: 120,
     backgroundColor: '#f1f2f6',
-    borderRadius: 6,
-    marginRight: 10,
-    overflow: 'hidden'
+    borderRadius: 8,
+    overflow: 'hidden',
+    marginRight: 15
   },
   image: {
     width: '100%',
     height: '100%'
   },
-  infoContainer: {
-    flex: 1,
-    justifyContent: 'center'
-  },
   questionNum: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 15,
     color: '#2f3640'
   },
   ansBadge: {
     backgroundColor: '#4cd137',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 4,
-    alignSelf: 'flex-start',
-    marginTop: 4
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
   },
   ansText: {
     color: '#fff',
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: 'bold'
   },
   delBtn: {
     backgroundColor: '#e84118',
-    padding: 10,
-    borderRadius: 8,
-    marginLeft: 10
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 6,
+  },
+  delBtnText: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: 'bold'
   },
   footer: {
     position: 'absolute',

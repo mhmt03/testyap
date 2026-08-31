@@ -28,7 +28,7 @@ export default function App() {
           <Stack.Screen 
             name="Home" 
             component={HomeScreen} 
-            options={{ title: 'Ana Sayfa', headerTitleAlign: 'center' }} 
+            options={{ headerShown: false }} 
           />
           <Stack.Screen 
             name="TestSettings" 

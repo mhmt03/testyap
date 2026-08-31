@@ -4,11 +4,18 @@ import { WebView } from 'react-native-webview';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as ImagePicker from 'expo-image-picker';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import { TestContext } from '../context/TestContext';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const IMAGES_DIR = FileSystem.documentDirectory + 'testYap_images/';
 
 export default function CameraScreen({ navigation }) {
+  const insets = useSafeAreaInsets();
+  const [permission, requestPermission] = useCameraPermissions();
+  const [cameraMode, setCameraMode] = useState(true);
+  const [cameraRef, setCameraRef] = useState(null);
+  
   const [photo, setPhoto] = useState(null);
   const [resolution, setResolution] = useState('Medium'); // Low, Medium, High
   const [colorMode, setColorMode] = useState('original'); // original, grayscale, blackwhite
@@ -230,7 +237,7 @@ export default function CameraScreen({ navigation }) {
         </View>
 
         <View style={styles.settingsPanel}>
-          <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+          <ScrollView bounces={false} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
             <Text style={styles.label}>Renk Modu:</Text>
             <View style={styles.row}>
               {[
