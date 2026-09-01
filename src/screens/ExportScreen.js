@@ -400,10 +400,10 @@ export default function ExportScreen() {
         <TextInput style={styles.input} value={title} onChangeText={setTitle} />
 
         <Text style={styles.label}>Üst Bilgi:</Text>
-        <TextInput style={styles.input} value={headerText} onChangeText={setHeaderText} />
+        <TextInput style={styles.input} value={headerText} onChangeText={setHeaderText} multiline={true} />
 
         <Text style={styles.label}>Alt Bilgi:</Text>
-        <TextInput style={styles.input} value={footerText} onChangeText={setFooterText} />
+        <TextInput style={styles.input} value={footerText} onChangeText={setFooterText} multiline={true} />
 
         <View style={styles.settingRow}>
           <Text style={styles.label}>Sütun Sayısı:</Text>
@@ -440,7 +440,7 @@ export default function ExportScreen() {
         {includeAnswerKey && (
           <View style={styles.settingRow}>
             <Text style={styles.label}>Cevap Anahtarı Konumu:</Text>
-            <View style={styles.rowBtns}>
+            <View style={{ flexDirection: 'column' }}>
               <TouchableOpacity style={[styles.btn, answerKeyLocation === 'separate' && styles.activeBtn]} onPress={() => setAnswerKeyLocation('separate')}>
                 <Text style={answerKeyLocation === 'separate' ? styles.activeText : styles.text}>Ayrı Sayfa</Text>
               </TouchableOpacity>
@@ -481,8 +481,8 @@ export default function ExportScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 15, backgroundColor: '#fff' },
-  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 20, textAlign: 'center', color: '#2f3640' },
-  label: { fontSize: 14, color: '#2f3640', marginBottom: 5, fontWeight: '600' },
+  title: { fontSize: 18, fontWeight: 'bold', marginBottom: 20, textAlign: 'center', color: '#2f3640' },
+  label: { fontSize: 10, color: '#2f3640', marginBottom: 5, fontWeight: '600' },
   input: { borderWidth: 1, borderColor: '#dcdde1', padding: 10, borderRadius: 8, marginBottom: 15, color: '#333' },
   settingRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
   rowBtns: { flexDirection: 'row' },

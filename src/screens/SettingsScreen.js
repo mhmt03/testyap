@@ -138,10 +138,10 @@ export default function SettingsScreen() {
           <Text style={styles.sectionTitle}>Varsayılan Ayarlar</Text>
           
           <Text style={styles.label}>Varsayılan Üst Bilgi:</Text>
-          <TextInput style={styles.input} value={defHeader} onChangeText={setDefHeader} />
+          <TextInput style={styles.input} value={defHeader} onChangeText={setDefHeader} multiline={true} />
           
           <Text style={styles.label}>Varsayılan Alt Bilgi:</Text>
-          <TextInput style={styles.input} value={defFooter} onChangeText={setDefFooter} />
+          <TextInput style={styles.input} value={defFooter} onChangeText={setDefFooter} multiline={true} />
 
           <Text style={styles.label}>Varsayılan Kenar Boşluğu:</Text>
           <View style={styles.rowBtns}>
