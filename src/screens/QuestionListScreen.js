@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, FlatList } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TestContext } from '../context/TestContext';
+import * as dbOperations from '../database/db';
 
 export default function QuestionListScreen({ navigation }) {
   const insets = useSafeAreaInsets();
@@ -30,6 +31,16 @@ export default function QuestionListScreen({ navigation }) {
       return;
     }
     navigation.navigate('Export');
+  };
+
+  const handleAddQuestion = async () => {
+    const isLicensedStr = await dbOperations.getSetting('isLicensed', 'false');
+    const isLicensed = isLicensedStr === 'true';
+    if (!isLicensed && questions.length >= 6) {
+      Alert.alert('Lisans Gerekli', 'Ücretsiz sürümde bir teste en fazla 6 soru ekleyebilirsiniz. Sınırsız soru eklemek için İşlemler bölümünden uygulamanızı aktifleştirin.');
+      return;
+    }
+    navigation.navigate('Camera');
   };
 
   const moveUp = (index) => {
@@ -101,7 +112,7 @@ export default function QuestionListScreen({ navigation }) {
       {questions.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>Henüz soru eklenmedi.</Text>
-          <TouchableOpacity style={styles.addBtn} onPress={() => navigation.navigate('Camera')}>
+          <TouchableOpacity style={styles.addBtn} onPress={handleAddQuestion}>
             <Text style={styles.addBtnText}>+ Soru Ekle</Text>
           </TouchableOpacity>
         </View>
@@ -119,7 +130,7 @@ export default function QuestionListScreen({ navigation }) {
           <TouchableOpacity style={styles.homeBtn} onPress={() => navigation.navigate('Home')}>
             <Text style={styles.btnText}>🏠</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.addMoreBtn} onPress={() => navigation.navigate('Camera')}>
+          <TouchableOpacity style={styles.addMoreBtn} onPress={handleAddQuestion}>
             <Text style={styles.btnText}>+ Ekle</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.exportBtn} onPress={handleExport}>

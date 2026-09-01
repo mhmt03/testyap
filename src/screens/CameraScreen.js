@@ -21,7 +21,7 @@ export default function CameraScreen({ navigation }) {
   const [colorMode, setColorMode] = useState('original'); // original, grayscale, blackwhite
   const [selectedAnswer, setSelectedAnswer] = useState('A');
   
-  const { addQuestion } = useContext(TestContext);
+  const { addQuestion, questions } = useContext(TestContext);
 
   useEffect(() => {
     const initDir = async () => {
@@ -186,6 +186,13 @@ export default function CameraScreen({ navigation }) {
   const handleSaveAndContinue = async () => {
     const success = await processAndSaveImage();
     if (success) {
+      const { getSetting } = require('../database/db');
+      const isLicensedStr = await getSetting('isLicensed', 'false');
+      if (isLicensedStr !== 'true' && (questions ? questions.length + 1 : 1) >= 6) {
+        Alert.alert('Lisans Gerekli', 'Ücretsiz sürüm sınırına (6 soru) ulaştınız.');
+        navigation.navigate('QuestionList');
+        return;
+      }
       setPhoto(null);
       setSelectedAnswer('A');
       openNativeCamera(); // Sıradaki soru için kamerayı tekrar aç

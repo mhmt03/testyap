@@ -116,8 +116,8 @@ export default function SettingsScreen() {
             </View>
           ) : (
             <View style={styles.licenseCard}>
-              <Text style={styles.licenseStatus}>Kullanım Durumu: {testCount} / 5 Test</Text>
-              <Text style={styles.licenseDesc}>Sınırsız test oluşturmak için uygulamayı aktifleştirin.</Text>
+              <Text style={styles.licenseStatus}>Ücretsiz Sürüm: Maksimum 6 Soru / Test</Text>
+              <Text style={styles.licenseDesc}>Sınırsız soru eklemek için uygulamayı aktifleştirin.</Text>
               <TextInput 
                 style={styles.licenseInput} 
                 placeholder="Aktivasyon Kodu (Örn: 12345)" 

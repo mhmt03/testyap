@@ -13,22 +13,6 @@ export default function TestSettingsScreen({ navigation }) {
       return;
     }
     
-    // Lisans kontrolü
-    const isLicensedStr = await dbOperations.getSetting('isLicensed', 'false');
-    const isLicensed = isLicensedStr === 'true';
-    
-    if (!isLicensed) {
-      const allTests = await dbOperations.getTests();
-      if (allTests.length >= 5) {
-        Alert.alert(
-          'Lisans Gerekli', 
-          'Ücretsiz sürümde en fazla 5 test oluşturabilirsiniz. Yeni test oluşturmak için mevcut testlerden birini silmeli veya İşlemler menüsünden uygulamayı aktifleştirmelisiniz.',
-          [{ text: 'Tamam', style: 'cancel' }]
-        );
-        return;
-      }
-    }
-    
     await startNewTest(inputName.trim());
     
     // Kameraya yönlendir
