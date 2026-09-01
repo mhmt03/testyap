@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { TouchableOpacity, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { TestProvider } from './src/context/TestContext';
@@ -58,7 +59,14 @@ export default function App() {
           <Stack.Screen 
             name="TestList" 
             component={TestListScreen} 
-            options={{ title: 'Kayıtlı Testler' }} 
+            options={({ navigation }) => ({ 
+              title: 'Kayıtlı Testler',
+              headerRight: () => (
+                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                  <Text style={{ color: '#0097e6', fontWeight: 'bold', fontSize: 14 }}>Ana Sayfa</Text>
+                </TouchableOpacity>
+              )
+            })} 
           />
           <Stack.Screen 
             name="Settings" 
