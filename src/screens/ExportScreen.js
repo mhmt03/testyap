@@ -19,6 +19,8 @@ export default function ExportScreen() {
   const [groupCount, setGroupCount] = useState(1);
   const [pageMargin, setPageMargin] = useState('15');
   const [optimizeSpace, setOptimizeSpace] = useState(false);
+  const [includeAnswerKey, setIncludeAnswerKey] = useState(true);
+  const [answerKeyLocation, setAnswerKeyLocation] = useState('separate');
   const [isExporting, setIsExporting] = useState(false);
   
   const [htmlToProcess, setHtmlToProcess] = useState('');
@@ -108,7 +110,7 @@ export default function ExportScreen() {
     setProcessingGroup(currentGroup.letter ? `${currentGroup.letter} Kitapçığı Hazırlanıyor...` : 'PDF Hazırlanıyor...');
     
     // HTML Oluştur ve WebView'e gönder
-    const html = generateProcessingHtml(currentGroup.title, currentGroup.questions, currentGroup.letter, index, pageMargin);
+    const html = generateProcessingHtml(currentGroup.title, currentGroup.questions, currentGroup.letter, index, pageMargin, includeAnswerKey, answerKeyLocation);
     setHtmlToProcess(html); // Bu, WebView'in yüklenmesini tetikler
   };
 
@@ -200,7 +202,7 @@ export default function ExportScreen() {
     }
   };
 
-  const generateProcessingHtml = (docTitle, qList, letter, index, marginStr) => {
+  const generateProcessingHtml = (docTitle, qList, letter, index, marginStr, incAnswer, ansLocation) => {
     let poolHtml = '';
     qList.forEach((q, i) => {
       let filterStyle = '';
@@ -254,6 +256,8 @@ export default function ExportScreen() {
           const bTitle = "${docTitle}";
           const bHeader = "${headerText}";
           const bFooter = "${footerText}";
+          const incAns = ${incAnswer ? 'true' : 'false'};
+          const ansLoc = "${ansLocation}";
           
           function createPage() {
             const p = document.createElement('div');
@@ -358,10 +362,22 @@ export default function ExportScreen() {
             }
 
             // Cevap Anahtarı Ekle
-            const ansPage = createPage();
-            ansPage.header = ''; // İstenirse başlık değiştirilir
-            ansPage.cols[0].innerHTML = '<h2>Cevap Anahtarı</h2><div class="answer-key">' + answerArray.join(' , ') + '</div>';
-            output.appendChild(ansPage.page);
+            if (incAns && answerArray.length > 0) {
+              if (ansLoc === 'separate') {
+                const ansPage = createPage();
+                ansPage.header = ''; // İstenirse başlık değiştirilir
+                ansPage.cols[0].innerHTML = '<h2>Cevap Anahtarı</h2><div class="answer-key">' + answerArray.join(' , ') + '</div>';
+                output.appendChild(ansPage.page);
+              } else if (ansLoc === 'footer') {
+                const lastPage = output.lastElementChild;
+                if (lastPage) {
+                  const footer = lastPage.querySelector('.footer');
+                  if (footer) {
+                    footer.innerHTML += '<div style="margin-top: 10px; font-size: 10px; font-weight: bold;">Cevap Anahtarı: ' + answerArray.join(', ') + '</div>';
+                  }
+                }
+              }
+            }
             
             pool.remove(); // Havuzu kaldır
             
@@ -415,6 +431,25 @@ export default function ExportScreen() {
           <Text style={styles.label}>Alan Optimize Et (Boşlukları Doldur):</Text>
           <Switch value={optimizeSpace} onValueChange={setOptimizeSpace} trackColor={{ true: '#4cd137' }} />
         </View>
+
+        <View style={styles.settingRow}>
+          <Text style={styles.label}>Cevap Anahtarı Eklensin:</Text>
+          <Switch value={includeAnswerKey} onValueChange={setIncludeAnswerKey} trackColor={{ true: '#4cd137' }} />
+        </View>
+
+        {includeAnswerKey && (
+          <View style={styles.settingRow}>
+            <Text style={styles.label}>Cevap Anahtarı Konumu:</Text>
+            <View style={styles.rowBtns}>
+              <TouchableOpacity style={[styles.btn, answerKeyLocation === 'separate' && styles.activeBtn]} onPress={() => setAnswerKeyLocation('separate')}>
+                <Text style={answerKeyLocation === 'separate' ? styles.activeText : styles.text}>Ayrı Sayfa</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.btn, answerKeyLocation === 'footer' && styles.activeBtn]} onPress={() => setAnswerKeyLocation('footer')}>
+                <Text style={answerKeyLocation === 'footer' ? styles.activeText : styles.text}>Son Sayfa Altı</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
 
         {isExporting ? (
           <View style={styles.loading}>
