@@ -21,6 +21,15 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "cli": {
+      "appVersionSource": "remote"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "37ebdc96-f2b0-407d-961e-bf921f6e75e2"
+      }
+    },
+    "owner": "gunnermg"
   }
 }
