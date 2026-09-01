@@ -34,7 +34,14 @@ export default function App() {
           <Stack.Screen 
             name="TestSettings" 
             component={TestSettingsScreen} 
-            options={{ title: 'Yeni Test' }} 
+            options={({ navigation }) => ({ 
+              title: 'Yeni Test',
+              headerRight: () => (
+                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                  <Text style={{ color: '#0097e6', fontWeight: 'bold', fontSize: 14 }}>Ana Sayfa</Text>
+                </TouchableOpacity>
+              )
+            })} 
           />
           <Stack.Screen 
             name="Camera" 
@@ -44,7 +51,14 @@ export default function App() {
           <Stack.Screen 
             name="QuestionList" 
             component={QuestionListScreen} 
-            options={{ title: 'Sorular' }} 
+            options={({ navigation }) => ({ 
+              title: 'Sorular',
+              headerRight: () => (
+                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                  <Text style={{ color: '#0097e6', fontWeight: 'bold', fontSize: 14 }}>Ana Sayfa</Text>
+                </TouchableOpacity>
+              )
+            })} 
           />
           <Stack.Screen 
             name="QuestionEdit" 
@@ -71,7 +85,14 @@ export default function App() {
           <Stack.Screen 
             name="Settings" 
             component={SettingsScreen} 
-            options={{ title: 'İşlemler' }} 
+            options={({ navigation }) => ({ 
+              title: 'İşlemler',
+              headerRight: () => (
+                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                  <Text style={{ color: '#0097e6', fontWeight: 'bold', fontSize: 14 }}>Ana Sayfa</Text>
+                </TouchableOpacity>
+              )
+            })} 
           />
         </Stack.Navigator>
       </NavigationContainer>
