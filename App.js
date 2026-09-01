@@ -63,12 +63,26 @@ export default function App() {
           <Stack.Screen 
             name="QuestionEdit" 
             component={QuestionEditScreen} 
-            options={{ title: 'Soruyu Düzenle' }} 
+            options={({ navigation }) => ({ 
+              title: 'Soruyu Düzenle',
+              headerRight: () => (
+                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                  <Text style={{ color: '#0097e6', fontWeight: 'bold', fontSize: 14 }}>Ana Sayfa</Text>
+                </TouchableOpacity>
+              )
+            })} 
           />
           <Stack.Screen 
             name="Export" 
             component={ExportScreen} 
-            options={{ title: 'Test Üret' }} 
+            options={({ navigation }) => ({ 
+              title: 'Test Üret',
+              headerRight: () => (
+                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                  <Text style={{ color: '#0097e6', fontWeight: 'bold', fontSize: 14 }}>Ana Sayfa</Text>
+                </TouchableOpacity>
+              )
+            })} 
           />
           <Stack.Screen 
             name="TestList" 

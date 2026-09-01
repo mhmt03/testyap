@@ -41,11 +41,6 @@ export default function CameraScreen({ navigation }) {
       setColorMode(await getSetting('defColor', 'original'));
     };
     initDir();
-    
-    // İlk açılışta kamerayı otomatik başlat
-    setTimeout(() => {
-      openNativeCamera();
-    }, 300);
   }, []);
 
   const openNativeCamera = async () => {

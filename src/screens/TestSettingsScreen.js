@@ -45,7 +45,7 @@ export default function TestSettingsScreen({ navigation }) {
         onChangeText={setInputName}
       />
       <TouchableOpacity style={styles.button} onPress={handleStart}>
-        <Text style={styles.buttonText}>Soruları Eklemeye Başla (Kamera)</Text>
+        <Text style={styles.buttonText}>Soruları Eklemeye Başla</Text>
       </TouchableOpacity>
     </View>
   );
