@@ -206,8 +206,10 @@ export default function ExportScreen() {
     let poolHtml = '';
     qList.forEach((q, i) => {
       let filterStyle = '';
-      if (q.colorMode === 'grayscale' || q.colorMode === 'blackwhite') {
+      if (q.colorMode === 'grayscale') {
         filterStyle = 'filter: grayscale(100%);';
+      } else if (q.colorMode === 'blackwhite') {
+        filterStyle = 'filter: grayscale(100%) contrast(280%) brightness(125%);';
       }
 
       const imgType = q.imgType || 'jpeg';

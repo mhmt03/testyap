@@ -7,6 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { TestContext } from '../context/TestContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import FilteredImage from '../components/FilteredImage';
 
 const IMAGES_DIR = FileSystem.documentDirectory + 'testYap_images/';
 
@@ -210,13 +211,11 @@ export default function CameraScreen({ navigation }) {
     return (
       <View style={styles.container}>
         <View style={styles.previewContainer}>
-          <Image 
-            source={{ uri: photo.uri }} 
-            style={[styles.previewImage, colorMode !== 'original' && { opacity: 0.7 }]} 
-            resizeMode="contain" 
+          <FilteredImage 
+            uri={photo.uri} 
+            colorMode={colorMode} 
+            style={styles.previewImage} 
           />
-          {colorMode === 'grayscale' && <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(128,128,128,0.5)' }]} pointerEvents="none" />}
-          {colorMode === 'blackwhite' && <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.6)' }]} pointerEvents="none" />}
           <Text style={styles.cropHint}>Seçilen filtre dışa aktarılırken de uygulanacaktır.</Text>
           
           <View style={styles.rotationOverlay}>

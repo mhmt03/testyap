@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, FlatList } from
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TestContext } from '../context/TestContext';
 import * as dbOperations from '../database/db';
+import FilteredImage from '../components/FilteredImage';
 
 export default function QuestionListScreen({ navigation }) {
   const insets = useSafeAreaInsets();
@@ -69,13 +70,11 @@ export default function QuestionListScreen({ navigation }) {
             onPress={() => navigation.navigate('QuestionEdit', { questionId: item.id })}
             style={[styles.imageContainer, { width: imageSize, height: imageSize }]}
           >
-            <Image 
-              source={{ uri: item.imageUri }} 
-              style={[styles.image, item.colorMode !== 'original' && { opacity: 0.7 }]} 
-              resizeMode="contain" 
+            <FilteredImage 
+              uri={item.imageUri} 
+              colorMode={item.colorMode} 
+              style={styles.image} 
             />
-            {item.colorMode === 'grayscale' && <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(128,128,128,0.5)' }]} pointerEvents="none" />}
-            {item.colorMode === 'blackwhite' && <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.6)' }]} pointerEvents="none" />}
           </TouchableOpacity>
 
           {/* Sağ Kısım (flex: 1) */}
